@@ -56,7 +56,7 @@ class PostWizardForm(PostAdminFormBase):
     def save(self, commit=True):
         self.instance._set_default_author(get_current_user())
         post = super(PostWizardForm, self).save(commit)
-        if post.port_text:
+        if post.post_text:
             add_plugin(post.content, 'TextPlugin', post.get_current_language(), body=post.post_text)
         return post
 
