@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import warnings
 
+from cms.api import add_plugin
 from cms.utils.compat import DJANGO_1_8
 from cms.utils.permissions import get_current_user
 from cms.wizards.wizard_base import Wizard
@@ -54,7 +55,9 @@ class PostWizardForm(PostAdminFormBase):
 
     def save(self, commit=True):
         self.instance._set_default_author(get_current_user())
-        return super(PostWizardForm, self).save(commit)
+        post = super(PostWizardForm, self).save(commit)
+        add_plugin(post.content, 'TextPlugin', post.get_current_language(), body=post.post_text)
+        return post
 
     def clean_slug(self):
         """
